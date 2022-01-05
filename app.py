@@ -21,8 +21,8 @@ ibu_values=[35, 60, 85, 75]
 abv_values=[5.4, 7.1, 9.2, 4.3]
 color1='darkred'
 color2='orange'
-mytitle='Beer Comparison'
-tabtitle='beer!'
+mytitle='Test Dataframe'
+tabtitle='test dataframe'
 myheading='Flying Dog Beers'
 label1='IBU'
 label2='ABV'
@@ -60,8 +60,8 @@ app.title=tabtitle
 app.layout = html.Div(children=[
     html.H1(myheading),
     dcc.Graph(
-        id='flyingdog',
-        figure=beer_fig
+        id='value',
+        figure=fig
     )
     ]
 )
