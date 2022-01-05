@@ -7,6 +7,13 @@ import plotly.graph_objs as go
 import pandas as pd
 
 df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/finance-charts-apple.csv')
+fig = go.Figure(go.Candlestick(
+        x=df['Date'],
+        open=df['AAPL.Open'],
+        high=df['AAPL.High'],
+        low=df['AAPL.Low'],
+        close=df['AAPL.Close']
+    ))
 
 ########### Define your variables
 beers=['Chesapeake Stout', 'Snake Dog IPA', 'Imperial Porter', 'Double Dog IPA']
@@ -19,8 +26,6 @@ tabtitle='beer!'
 myheading='Flying Dog Beers'
 label1='IBU'
 label2='ABV'
-githublink='https://github.com/austinlasseter/flying-dog-beers'
-sourceurl='https://www.flyingdog.com/beers/'
 
 ########### Set up the chart
 bitterness = go.Bar(
@@ -57,10 +62,7 @@ app.layout = html.Div(children=[
     dcc.Graph(
         id='flyingdog',
         figure=beer_fig
-    ),
-    html.A('Code on Github', href=githublink),
-    html.Br(),
-    html.A('Data Source', href=sourceurl),
+    )
     ]
 )
 
