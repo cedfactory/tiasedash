@@ -1,43 +1,63 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
-import plotly.graph_objects as go
+import plotly.graph_objs as go
 
-import pandas as pd
+########### Define your variables
+beers=['Chesapeake Stout', 'Snake Dog IPA', 'Imperial Porter', 'Double Dog IPA']
+ibu_values=[35, 60, 85, 75]
+abv_values=[5.4, 7.1, 9.2, 4.3]
+color1='darkred'
+color2='orange'
+mytitle='Beer Comparison'
+tabtitle='beer!'
+myheading='Flying Dog Beers'
+label1='IBU'
+label2='ABV'
+githublink='https://github.com/austinlasseter/flying-dog-beers'
+sourceurl='https://www.flyingdog.com/beers/'
 
-df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/finance-charts-apple.csv')
+########### Set up the chart
+bitterness = go.Bar(
+    x=beers,
+    y=ibu_values,
+    name=label1,
+    marker={'color':color1}
+)
+alcohol = go.Bar(
+    x=beers,
+    y=abv_values,
+    name=label2,
+    marker={'color':color2}
+)
 
-app = dash.Dash(__name__)
+beer_data = [bitterness, alcohol]
+beer_layout = go.Layout(
+    barmode='group',
+    title = mytitle
+)
 
-app.layout = html.Div([
-    dcc.Checklist(
-        id='toggle-rangeslider',
-        options=[{'label': 'Include Rangeslider', 
-                  'value': 'slider'}],
-        value=['slider']
+beer_fig = go.Figure(data=beer_data, layout=beer_layout)
+
+
+########### Initiate the app
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+server = app.server
+app.title=tabtitle
+
+########### Set up the layout
+app.layout = html.Div(children=[
+    html.H1(myheading),
+    dcc.Graph(
+        id='flyingdog',
+        figure=beer_fig
     ),
-    dcc.Graph(id="graph"),
-])
+    html.A('Code on Github', href=githublink),
+    html.Br(),
+    html.A('Data Source', href=sourceurl),
+    ]
+)
 
-@app.callback(
-    Output("graph", "figure"), 
-    [Input("toggle-rangeslider", "value")])
-def display_candlestick(value):
-    fig = go.Figure(go.Candlestick(
-        x=df['Date'],
-        open=df['AAPL.Open'],
-        high=df['AAPL.High'],
-        low=df['AAPL.Low'],
-        close=df['AAPL.Close']
-    ))
-
-    fig.update_layout(
-        xaxis_rangeslider_visible='slider' in value
-    )
-
-    return fig
-
- 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server()
